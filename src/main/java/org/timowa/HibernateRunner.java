@@ -1,10 +1,7 @@
 package org.timowa;
 
 import lombok.extern.slf4j.Slf4j;
-import org.timowa.entity.Birthday;
-import org.timowa.entity.PersonalInfo;
-import org.timowa.entity.Role;
-import org.timowa.entity.User;
+import org.timowa.entity.*;
 import org.timowa.util.HibernateUtil;
 
 import java.time.LocalDate;
@@ -12,8 +9,11 @@ import java.time.LocalDate;
 @Slf4j
 public class HibernateRunner {
     public static void main(String[] args) {
+        Company company = Company.builder()
+                .name("Yandex")
+                .build();
         User user = User.builder()
-                .username("timowa@gmail.com")
+                .username("timowa1@gmail.com")
                 .personalInfo(PersonalInfo.builder()
                         .firstname("Marya")
                         .lastname("Babel'")
@@ -21,13 +21,17 @@ public class HibernateRunner {
                                 new Birthday(LocalDate.of(2079, 3, 27)))
                         .build())
                 .role(Role.ADMIN)
+                .company(company)
                 .build();
-        log.info("User object state: {}", user);
 
         try (var sessionFactory = HibernateUtil.buildSessionFactory();
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
+
+            var user1 = session.get(User.class, 2);
+            user.setCompany(user1.getCompany());
             session.saveOrUpdate(user);
+
             session.getTransaction().commit();
         }
     }

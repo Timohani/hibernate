@@ -1,13 +1,11 @@
 package org.timowa.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
+@ToString(exclude = {"personalInfo", "company"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,4 +20,6 @@ public class User {
     private PersonalInfo personalInfo;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Company company;
 }
