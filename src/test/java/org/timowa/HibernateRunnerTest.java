@@ -11,12 +11,33 @@ import java.time.Instant;
 
 class HibernateRunnerTest {
     @Test
+    public void checkHQL() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        final String name = "Timowa";
+        final String companyName = "Google";
+
+        var users = session.createNamedQuery("FindUserByNameAndCompany")
+                .setParameter("firstname", name)
+                .setParameter("company", companyName)
+                .list();
+        System.out.println(users);
+
+        session.createQuery(
+                "update User u set role = 'ADMIN' where u.personalInfo.lastname = 'gre'")
+                .executeUpdate();
+
+        session.getTransaction().commit();
+    }
+
+    @Test
     public void checkInheritance() {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Company company = Company.builder()
+        /*Company company = Company.builder()
                 .name("SberBank")
                 .build();
         session.save(company);
@@ -41,7 +62,7 @@ class HibernateRunnerTest {
         Programmer programmer1 = session.get(Programmer.class, 1L);
         Manager manager1 = session.get(Manager.class, 2L);
         System.out.println(programmer1);
-        System.out.println(manager1);
+        System.out.println(manager1);*/
 
         session.getTransaction().commit();
     }

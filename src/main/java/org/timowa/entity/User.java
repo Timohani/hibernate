@@ -6,6 +6,13 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedQuery(name = "FindUserByNameAndCompany", query = """
+                select u from User u
+                join u.company c
+                where u.personalInfo.firstname = :firstname
+                and c.name = :company
+                """)
+
 @Data
 @ToString(exclude = {"profile", "company", "userChats"})
 @NoArgsConstructor
@@ -13,7 +20,6 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +35,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
-//    @Builder.Default
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
 }
