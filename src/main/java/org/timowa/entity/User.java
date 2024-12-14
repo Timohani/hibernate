@@ -3,9 +3,11 @@ package org.timowa.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
-@ToString(exclude = {"personalInfo", "company"})
+@ToString(exclude = {"profile", "company", "userChats"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -14,7 +16,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String username;
     @Embedded //Optional (Необязательно)
     private PersonalInfo personalInfo;
@@ -22,4 +24,11 @@ public class User {
     private Role role;
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Profile profile;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<UserChat> userChats = new ArrayList<>();
 }
