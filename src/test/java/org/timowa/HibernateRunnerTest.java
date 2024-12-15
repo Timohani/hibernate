@@ -8,6 +8,7 @@ import org.timowa.entity.*;
 import org.timowa.util.HibernateUtil;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 class HibernateRunnerTest {
     @Test
@@ -15,7 +16,7 @@ class HibernateRunnerTest {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
-        final String name = "Timowa";
+        final String name = "John";
         final String companyName = "Google";
 
         var users = session.createNamedQuery("FindUserByNameAndCompany")
@@ -73,10 +74,20 @@ class HibernateRunnerTest {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Company company = Company.builder()
-                .name("Raxoon")
+        Company company = session.get(Company.class, 2);
+
+        User user = User.builder()
+                .username("john@mail.cum")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("John")
+                        .lastname("Jackson")
+                        .birthDate(
+                                new Birthday(LocalDate.of(2001, 2, 28)))
+                        .build())
+                .role(Role.USER)
+                .company(company)
                 .build();
-        session.save(company);
+        session.save(user);
 
         session.getTransaction().commit();
     }
