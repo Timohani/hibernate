@@ -12,6 +12,25 @@ import java.time.LocalDate;
 
 class HibernateRunnerTest {
     @Test
+    public void checkCriteriaAPI() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var cb = session.getCriteriaBuilder();
+        var criteria = cb.createQuery();
+        var user = criteria.from(User.class);
+        String firstName = "John";
+
+        criteria.select(user).where(cb.equal(user.get("personalInfo").get("firstname"),  firstName));
+
+        var result = session.createQuery(criteria).list();
+        System.out.println(result);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
     public void checkHQL() {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
