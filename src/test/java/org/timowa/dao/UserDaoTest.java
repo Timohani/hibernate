@@ -31,4 +31,15 @@ class UserDaoTest {
 
         session.getTransaction().commit();
     }
+
+    @Test
+    public void findLimitedUsersOrderedByBirthdayTest() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        System.out.println(UserDao.getInstance().findLimitedUsersOrderedByBirthday(session, 2));
+
+        session.getTransaction().commit();
+    }
 }
