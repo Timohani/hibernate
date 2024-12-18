@@ -20,7 +20,7 @@ class HibernateRunnerTest {
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery();
         var user = criteria.from(User.class);
-        String firstName = "John";
+        final String firstName = "John";
 
         criteria.select(user).where(cb.equal(user.get("personalInfo").get("firstname"),  firstName));
 
@@ -52,43 +52,7 @@ class HibernateRunnerTest {
     }
 
     @Test
-    public void checkInheritance() {
-        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
-        @Cleanup Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        /*Company company = Company.builder()
-                .name("SberBank")
-                .build();
-        session.save(company);
-
-        Programmer programmer = Programmer.builder()
-                .username("tupoyIshak228@jmail.cum")
-                .language(Language.PYTHON)
-                .company(company)
-                .build();
-        session.save(programmer);
-
-        Manager manager = Manager.builder()
-                .username("megaSigma777@gmail.com")
-                .project("amogus")
-                .company(company)
-                .build();
-        session.save(manager);
-
-        session.flush();
-        session.clear();
-
-        Programmer programmer1 = session.get(Programmer.class, 1L);
-        Manager manager1 = session.get(Manager.class, 2L);
-        System.out.println(programmer1);
-        System.out.println(manager1);*/
-
-        session.getTransaction().commit();
-    }
-
-    @Test
-    public void checkH2() {
+    public void checkMemoryDataBase() {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -121,7 +85,7 @@ class HibernateRunnerTest {
         User user = session.get(User.class, 4L);
         UserChat userChat = new UserChat();
         userChat.setCreatedAt(Instant.now());
-        userChat.setCreatedBy("Andryha228");
+        userChat.setCreatedBy("Andrew228");
 
         userChat.setChat(chat);
         userChat.setUser(user);
@@ -165,7 +129,7 @@ class HibernateRunnerTest {
     }
 
     @Test
-    public void addNewUserAndCompany() {
+    public void checkCascadeType() {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
