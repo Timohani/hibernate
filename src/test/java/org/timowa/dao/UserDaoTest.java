@@ -33,12 +33,27 @@ class UserDaoTest {
     }
 
     @Test
-    public void findLimitedUsersOrderedByBirthdayTest() {
+    public void findAllByCompanyNameTest() {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        System.out.println(UserDao.getInstance().findLimitedUsersOrderedByBirthday(session, 2));
+        final String companyName = "Google";
+
+        System.out.println(UserDao.getInstance().findAllByCompanyName(session, companyName));
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void findAllPaymentsByCompanyNameTest() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        final String companyName = "Google";
+
+        System.out.println(UserDao.getInstance().findAllPaymentsByCompanyName(session, companyName));
 
         session.getTransaction().commit();
     }

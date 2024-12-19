@@ -16,6 +16,7 @@
     <mapping class = "org.timowa.entity.Profile"/>
     <mapping class = "org.timowa.entity.Chat"/>
     <mapping class = "org.timowa.entity.UserChat"/>
+    <mapping class = "org.timowa.entity.Payment"/>
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
   </session-factory>

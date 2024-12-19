@@ -14,7 +14,7 @@ import java.util.List;
                 """)
 
 @Data
-@ToString(exclude = {"profile", "company", "userChats"})
+@ToString(exclude = {"profile", "company", "userChats", "payments"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -34,6 +34,9 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
+
+    @OneToMany
+    private List<Payment> payments;
 
     @Builder.Default
     @OneToMany(mappedBy = "user")
