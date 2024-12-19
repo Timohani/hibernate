@@ -1,20 +1,19 @@
 package org.timowa.entity;
 
 import lombok.*;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NamedQuery(name = "FindUserByNameAndCompany", query = """
-                select u from User u
-                join u.company c
-                where u.personalInfo.firstname = :firstname
-                and c.name = :company
-                """)
+@FetchProfile(name = "withCompany", fetchOverrides = {
+        @FetchProfile.FetchOverride(entity = User.class, association = "company", mode = FetchMode.JOIN)
+})
 
 @Data
-@ToString(exclude = {"profile", "company", "userChats", "payments"})
+@ToString(exclude = {"company", "userChats", "payments"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,19 +23,20 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
+
     @Embedded //Optional (Необязательно)
     private PersonalInfo personalInfo;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Profile profile;
-
-    @OneToMany
-    private List<Payment> payments;
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private List<Payment> payments = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "user")
