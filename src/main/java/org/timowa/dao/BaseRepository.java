@@ -1,8 +1,9 @@
 package org.timowa.dao;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.SessionFactory;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -12,39 +13,35 @@ public class BaseRepository <K extends Serializable, E>
         implements Repository<K, E> {
 
     private final Class<E> clazz;
-    private final SessionFactory sessionFactory;
+    @Getter
+    private final EntityManager entityManager;
 
     @Override
     public E save(E entity) {
-        var session = sessionFactory.getCurrentSession();
-        session.save(entity);
+        entityManager.persist(entity);
         return entity;
     }
 
     @Override
     public void delete(K id) {
-        var session = sessionFactory.getCurrentSession();
-        session.delete(session.find(clazz, id));
-        session.flush();
+        entityManager.remove(entityManager.find(clazz, id));
+        entityManager.flush();
     }
 
     @Override
     public void update(E entity) {
-        var session = sessionFactory.getCurrentSession();
-        session.merge(entity);
+        entityManager.merge(entity);
     }
 
     @Override
     public Optional<E> findById(K id) {
-        var session = sessionFactory.getCurrentSession();
-        return Optional.ofNullable(session.find(clazz, id));
+        return Optional.ofNullable(entityManager.find(clazz, id));
     }
 
     @Override
     public List<E> findAll() {
-        var session = sessionFactory.getCurrentSession();
-        var criteria = session.getCriteriaBuilder().createQuery(clazz);
+        var criteria = entityManager.getCriteriaBuilder().createQuery(clazz);
         criteria.from(clazz);
-        return session.createQuery(criteria).getResultList();
+        return entityManager.createQuery(criteria).getResultList();
     }
 }
